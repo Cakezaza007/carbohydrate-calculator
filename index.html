@@ -1,77 +1,74 @@
-<!DOCTYPE html><html lang="th">
+<!DOCTYPE html>
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>คำนวณคาร์โบไฮเดรต</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            margin: 20px;
-        }
-        .container {
-            max-width: 600px;
-            margin: auto;
-            padding: 20px;
-            border: 1px solid #ddd;
-            border-radius: 10px;
-            box-shadow: 2px 2px 10px #aaa;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
-        th, td {
-            border: 1px solid #ddd;
-            padding: 8px;
-            text-align: center;
-        }
-        .button {
-            background-color: orange;
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            cursor: pointer;
-            margin-top: 10px;
-        }
+        .highlight { color: green; font-weight: bold; }
+        .lose { color: red; }
+        .gain { color: blue; }
     </style>
 </head>
 <body>
     <h1>คำนวณคาร์โบไฮเดรต</h1>
-    <div class="container">
-        <label>น้ำหนัก (กิโลกรัม): <input type="number" id="weight" value="60"></label><br><br>
-        <label>ส่วนสูง (เซนติเมตร): <input type="number" id="height" value="180"></label><br><br>
-        <label>อายุ: <input type="number" id="age" value="25"></label><br><br>
-        <label>เพศ: 
-            <select id="gender">
-                <option value="male">ชาย</option>
-                <option value="female">หญิง</option>
+    <form id="calculatorForm">
+        <label>อายุ: <input type="number" id="age"></label><br>
+        <label>ส่วนสูง (ซม.): <input type="number" id="height"></label><br>
+        <label>น้ำหนัก (กก.): <input type="number" id="weight"></label><br>
+        <label>กิจกรรม:
+            <select id="activity">
+                <option value="1.2">ไม่ออกกำลังกาย</option>
+                <option value="1.375">ออกกำลังกายน้อย</option>
+                <option value="1.55">ออกกำลังกายปานกลาง</option>
+                <option value="1.725">ออกกำลังกายหนัก</option>
+                <option value="1.9">ออกกำลังกายหนักมาก</option>
             </select>
-        </label><br><br>
-        <button class="button" onclick="calculateCarbs()">คำนวณ</button>
-        <div id="result"></div>
-    </div>
-    <script>
-        function calculateCarbs() {
-            let weight = document.getElementById('weight').value;
-            let calories = weight * 35;
-            let minCarbs = (calories * 0.4) / 4;
-            let maxCarbs = (calories * 0.75) / 4;document.getElementById('result').innerHTML = `
-            <h3>ผลการคำนวณ</h3>
-            <table>
-                <tr>
-                    <th>จำนวนแคลอรี่</th>
-                    <th>จำนวนคาร์โบไฮเดรต (กรัม/วัน)</th>
-                </tr>
-                <tr>
-                    <td>${calories} kcal</td>
-                    <td>${minCarbs.toFixed(2)} - ${maxCarbs.toFixed(2)} กรัม</td>
-                </tr>
-            </table>
-        `;
-    }
-</script>
+        </label><br>
+        <button type="button" onclick="calculate()">คำนวณ</button>
+    </form>
+    <h2>ผลการคำนวณ</h2>
+    <table border="1">
+        <tr>
+            <th>จำนวนแคลอรี่</th>
+            <th>การดูแลสุขภาพ</th>
+            <th>จำนวนคาร์โบไฮเดรต (40% - 75%)</th>
+        </tr>
+        <tbody id="resultTable"></tbody>
+    </table>
 
+    <script>
+        function calculate() {
+            let age = document.getElementById('age').value;
+            let height = document.getElementById('height').value;
+            let weight = document.getElementById('weight').value;
+            let activity = document.getElementById('activity').value;
+            
+            let bmr = 10 * weight + 6.25 * height - 5 * age + 5;
+            let tdee = bmr * activity;
+
+            let goals = [
+                { name: "รักษาน้ำหนัก", cal: tdee, class: "highlight" },
+                { name: "เพื่อลด 0.5 กก./สัปดาห์", cal: tdee - 500, class: "lose" },
+                { name: "เพื่อลด 1 กก./สัปดาห์", cal: tdee - 1000, class: "lose" },
+                { name: "เพื่อเพิ่ม 0.5 กก./สัปดาห์", cal: tdee + 500, class: "gain" },
+                { name: "เพื่อเพิ่ม 1 กก./สัปดาห์", cal: tdee + 1000, class: "gain" }
+            ];
+            
+            let resultTable = document.getElementById('resultTable');
+            resultTable.innerHTML = "";
+            
+            goals.forEach(goal => {
+                let carbMin = Math.round((goal.cal * 0.4) / 4);
+                let carbMax = Math.round((goal.cal * 0.75) / 4);
+                
+                let row = `<tr class='${goal.class}'>
+                    <td>${Math.round(goal.cal)}</td>
+                    <td>${goal.name}</td>
+                    <td>${carbMin} (40%) - ${carbMax} (75%) กรัม/วัน</td>
+                </tr>`;
+                
+                resultTable.innerHTML += row;
+            });
+        }
+    </script>
 </body>
 </html>
