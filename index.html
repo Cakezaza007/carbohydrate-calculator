@@ -1,0 +1,77 @@
+<!DOCTYPE html><html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>คำนวณคาร์โบไฮเดรต</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: auto;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            box-shadow: 2px 2px 10px #aaa;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: center;
+        }
+        .button {
+            background-color: orange;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>คำนวณคาร์โบไฮเดรต</h1>
+    <div class="container">
+        <label>น้ำหนัก (กิโลกรัม): <input type="number" id="weight" value="60"></label><br><br>
+        <label>ส่วนสูง (เซนติเมตร): <input type="number" id="height" value="180"></label><br><br>
+        <label>อายุ: <input type="number" id="age" value="25"></label><br><br>
+        <label>เพศ: 
+            <select id="gender">
+                <option value="male">ชาย</option>
+                <option value="female">หญิง</option>
+            </select>
+        </label><br><br>
+        <button class="button" onclick="calculateCarbs()">คำนวณ</button>
+        <div id="result"></div>
+    </div>
+    <script>
+        function calculateCarbs() {
+            let weight = document.getElementById('weight').value;
+            let calories = weight * 35;
+            let minCarbs = (calories * 0.4) / 4;
+            let maxCarbs = (calories * 0.75) / 4;document.getElementById('result').innerHTML = `
+            <h3>ผลการคำนวณ</h3>
+            <table>
+                <tr>
+                    <th>จำนวนแคลอรี่</th>
+                    <th>จำนวนคาร์โบไฮเดรต (กรัม/วัน)</th>
+                </tr>
+                <tr>
+                    <td>${calories} kcal</td>
+                    <td>${minCarbs.toFixed(2)} - ${maxCarbs.toFixed(2)} กรัม</td>
+                </tr>
+            </table>
+        `;
+    }
+</script>
+
+</body>
+</html>
